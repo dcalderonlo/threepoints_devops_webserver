@@ -1,0 +1,51 @@
+name: Pull Request Check
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  analyze_code:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run SAST analysis
+      run: echo "Realizando análisis de SAST"
+      id: sast
+
+    - name: Check requirements
+      run: |
+        if [ -f "allow_pull_request.txt" ]; then
+          echo "Permitiendo Pull Request"
+          echo "allow_pull=true" >> $GITHUB_ENV
+        else
+          echo "Impidiendo Pull Request"
+          echo "allow_pull=false" >> $GITHUB_ENV
+          exit 1
+        fi
+
+  allow_build:
+    needs: analyze_code
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check allow_pull variable
+      run: |
+        if [ "${{ env.allow_pull }}" = "true" ]; then
+          echo "Permitiendo Pull Request"
+        else
+          echo "Build fallida. Impidiendo Pull Request"
+          exit 1
+        fi
+
+    - name: Save allow_pull_request.txt as artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: allow_pull_request
+        path: allow_pull_request.txt
