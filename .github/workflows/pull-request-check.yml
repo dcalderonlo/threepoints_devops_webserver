@@ -26,7 +26,6 @@ jobs:
         else
           echo "Impidiendo Pull Request"
           echo "allow_pull=false" >> $GITHUB_ENV
-          exit 1
         fi
 
   allow_build:
@@ -49,3 +48,4 @@ jobs:
       with:
         name: allow_pull_request
         path: allow_pull_request.txt
+
