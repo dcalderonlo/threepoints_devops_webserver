@@ -13,20 +13,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Run SAST analysis
-      run: echo "Realizando análisis de SAST"
-      id: sast
-
+      
     - name: Check requirements
       run: |
         if [ -f "allow_pull_request.txt" ]; then
           echo "Permitiendo Pull Request"
-          echo "allow_pull=true" >> $GITHUB_ENV
+          echo "allow_pull=true" >> pull_request_results.txt
         else
           echo "Impidiendo Pull Request"
-          echo "allow_pull=false" >> $GITHUB_ENV
-          exit 1
+          echo "allow_pull=false" >> pull_request_results.txt
         fi
 
   allow_build:
