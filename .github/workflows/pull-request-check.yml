@@ -22,10 +22,11 @@ jobs:
       run: |
         if [ -f "allow_pull_request.txt" ]; then
           echo "Permitiendo Pull Request"
-          echo "allow_pull=true" >> pull_request_results.txt
+          echo "allow_pull=true" >> $GITHUB_ENV
         else
           echo "Impidiendo Pull Request"
-          echo "allow_pull=false" >> pull_request_results.txt
+          echo "allow_pull=false" >> $GITHUB_ENV
+          exit 1
         fi
 
   allow_build:
@@ -48,4 +49,3 @@ jobs:
       with:
         name: allow_pull_request
         path: allow_pull_request.txt
-
